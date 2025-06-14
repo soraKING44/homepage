@@ -219,6 +219,7 @@ footer {
 
     .ad-item {
         position: relative;
+        justify-content: flex-start;
     }
 
     .ad-item > a + img {
