@@ -226,19 +226,11 @@ footer {
 
     .ad-item {
         flex-shrink: 0;
-    }
-
-/*    .ad-container {
-        justify-items: start;
-    }
-
-    .ad-item {
-        position: relative;
         background: none;
         box-shadow: none;
-        transform: none !important;
+        transform: none;
     }
-*/
+
     .ad-item > a + img {
         position: absolute;
     }
