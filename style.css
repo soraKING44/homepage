@@ -217,10 +217,15 @@ footer {
         font-size: 1.8rem;
     }
 
+    .ad-container {
+        justify-items: start;
+    }
+
     .ad-item {
         position: relative;
         background: none;
         box-shadow: none;
+        transform: none !important;
     }
 
     .ad-item > a + img {
