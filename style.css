@@ -223,7 +223,7 @@ footer {
     }
 
     .ad-item > a + img {
-        position: absolute;
+        display: none;
     }
 
 }
