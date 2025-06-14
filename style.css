@@ -219,19 +219,20 @@ footer {
 
     .ad-item {
         position: relative;
-        justify-content: flex-start;
+        background: none;
+        box-shadow: none;
     }
 
     .ad-item > a + img {
-        display: none;
+        position: absolute;
     }
 
-    .ad-item a {
-        display: block !important;
-        width: 100% !important;
-        height: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
+    #advertisement.section {
+        background: none;
+        box-shadow: none;
     }
 
+    #advertisement.section h2 {
+        color: white;
+    }
 }
