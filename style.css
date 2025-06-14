@@ -212,4 +212,17 @@ footer {
     .cards {
         justify-content: center;
     }
+
+    .section h2 {
+        font-size: 1.8rem;
+    }
+
+    .ad-item {
+        position: relative;
+    }
+
+    .ad-item > a + img {
+        position: absolute;
+    }
+
 }
