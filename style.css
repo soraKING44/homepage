@@ -160,7 +160,7 @@ main {
 }
 
 .ad-container {
-    display: flex;
+    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
     margin-top: 2rem;
@@ -218,6 +218,17 @@ footer {
     }
 
     .ad-container {
+        display: flex;
+        gap: 2rem;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .ad-item {
+        flex-shrink: 0;
+    }
+
+/*    .ad-container {
         justify-items: start;
     }
 
@@ -227,7 +238,7 @@ footer {
         box-shadow: none;
         transform: none !important;
     }
-
+*/
     .ad-item > a + img {
         position: absolute;
     }
