@@ -212,4 +212,35 @@ footer {
     .cards {
         justify-content: center;
     }
+
+    .section h2 {
+        font-size: 1.8rem;
+    }
+
+    .ad-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .ad-item {
+        flex-shrink: 0;
+        background: none;
+        box-shadow: none;
+        transform: none;
+    }
+
+    .ad-item > a + img {
+        position: absolute;
+    }
+
+    #advertisement.section {
+        background: none;
+        box-shadow: none;
+    }
+
+    #advertisement.section h2 {
+        color: white;
+    }
 }
