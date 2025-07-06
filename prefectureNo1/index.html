@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>都道府県 No.1</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="google-site-verification" content="9MqnZ6ODqUkpzS_V8L_TZxBIRxsms3ZMdn_Qw_XIiJ4" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">都道府県 No.1</div>
+                <a href="https://soraking44.github.io/homepage" class="back-link">← ホームに戻る</a>
+            </div>
+        </header>
+
+        <div class="game-rules">
+            <h3 class="rules-title">遊び方</h3>
+            <div style="line-height: 1.8; padding: 0 10px;">
+                <p><strong style="color: #ff6f00;">都道府県 No.1！</strong>は<strong style="color: #d32f2f;">隠された都道府県ランキングの1位を推理するゲーム</strong>です。</p>
+                <p>何に関するランキングなのかは、<strong style="color: #2c5aa0;">ゲーム開始時には分かりません</strong>。最初にランダムでオープンになる都道府県の順位が、あなたの手がかりです。</p>
+                <p>日本地図や都道府県ボタンから、<strong style="color: #2c5aa0;">1位だと思う県をクリック</strong>しましょう。不正解の場合も、選んだ都道府県の順位が新たにオープンになり、推理のヒントが増えていきます。</p>
+                <p>開示される情報を元に、<strong style="color: #d32f2f;">ランキングのテーマを推理</strong>し、<strong style="color: #d32f2f;">少ない回答回数で1位を当てましょう！</strong></p>
+            </div>
+        </div>
+
+        <div class="game-info-panel">
+            <h1 class="game-title">都道府県 No.1</h1>
+            <p class="game-subtitle">ランキング 1位を当てよう！<br>なんのランキングかな？</p>
+            <div class="game-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="answer-count">0</div>
+                    <div class="stat-label">回答回数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="remaining-count">46</div>
+                    <div class="stat-label">残り選択肢</div>
+                </div>
+            </div>
+            <div class="message-area" id="message-area">
+                ヒント: <span id="hint-info"></span>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <div class="left-panel">
+                <h3 class="ranking-panel-title">都道府県ランキング</h3>
+                <div class="ranking-table" id="ranking-table">
+                    <!-- ランキング表がここに動的に生成されます -->
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="map-container">
+                    <div class="map-title">日本地図</div>
+                    <div id="japan-map-container">
+                        <!-- 外部SVGファイルがここに読み込まれます -->
+                    </div>
+                </div>
+
+                <div class="prefecture-buttons" id="prefecture-buttons">
+                    <!-- 都道府県ボタンがここに動的に生成されます -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div> <div class="ad-container">
+            <div class="ad-item">
+                <a href="https://px.a8.net/svt/ejp?a8mat=457J3Y+10BHGA+4VOQ+6HES1" rel="nofollow">
+                <img border="0" width="300" height="250" alt="" src="https://www26.a8.net/svt/bgt?aid=250614142061&wid=002&eno=01&mid=s00000022769001089000&mc=1"></a>
+                <img border="0" width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=457J3Y+10BHGA+4VOQ+6HES1" alt="">
+            </div>
+            <div class="ad-item">
+                <a href="https://px.a8.net/svt/ejp?a8mat=457J3Y+1MXYFU+4F56+601S1" rel="nofollow">
+                <img border="0" width="300" height="250" alt="" src="https://www25.a8.net/svt/bgt?aid=250614142099&wid=002&eno=01&mid=s00000020625001008000&mc=1"></a>
+                <img border="0" width="1" height="1" src="https://www19.a8.net/0.gif?a8mat=457J3Y+1MXYFU+4F56+601S1" alt="">
+            </div>
+            <div class="ad-item">
+                <a href="https://px.a8.net/svt/ejp?a8mat=457J3Y+1O4TNE+348+4ATCFL" rel="nofollow">
+                <img border="0" width="300" height="250" alt="" src="https://www26.a8.net/svt/bgt?aid=250614142101&wid=002&eno=01&mid=s00000000404026003000&mc=1"></a>
+                <img border="0" width="1" height="1" src="https://www16.a8.net/0.gif?a8mat=457J3Y+1O4TNE+348+4ATCFL" alt="">
+            </div>
+        </div>
+    </div>
+
+    <!-- データ出典表示 -->
+    <div class="data-credit">
+        <div>参考にしたデータ・素材等の詳細は<a href="https://github.com/soraKING44/prefectureNo1/blob/main/credit.md" target="_blank" rel="noopener noreferrer">こちらのページ</a>に記載しております</div>
+    </div>
+
+    <!-- バージョン表示 -->
+    <div class="version-footer">
+        <span id="version-text">version ... &copy; soraKING44</span>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

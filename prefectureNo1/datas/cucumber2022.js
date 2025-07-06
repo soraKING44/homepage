@@ -1,0 +1,51 @@
+// 都道府県別のきゅうり収穫量ランキングデータ
+// 農林水産省 https://www.maff.go.jp/j/tokei/kodomo/index.html
+window.rankingData = [
+    {rank: 1, name: "宮崎県", harvest: 64500},
+    {rank: 2, name: "群馬県", harvest: 55800},
+    {rank: 3, name: "埼玉県", harvest: 44000},
+    {rank: 4, name: "福島県", harvest: 40500},
+    {rank: 5, name: "千葉県", harvest: 31400},
+    {rank: 6, name: "茨城県", harvest: 25500},
+    {rank: 6, name: "高知県", harvest: 25500}, // 同順位
+    {rank: 8, name: "熊本県", harvest: 15300},
+    {rank: 8, name: "佐賀県", harvest: 15300}, // 同順位
+    {rank: 10, name: "愛知県", harvest: 14900},
+    {rank: 11, name: "北海道", harvest: 14500},
+    {rank: 12, name: "宮城県", harvest: 13900},
+    {rank: 13, name: "長野県", harvest: 13700},
+    {rank: 14, name: "岩手県", harvest: 11900},
+    {rank: 14, name: "山形県", harvest: 11900}, // 同順位
+    {rank: 16, name: "栃木県", harvest: 10500},
+    {rank: 17, name: "神奈川県", harvest: 10400},
+    {rank: 18, name: "鹿児島県", harvest: 9550},
+    {rank: 19, name: "福岡県", harvest: 9310},
+    {rank: 20, name: "愛媛県", harvest: 8600},
+    {rank: 21, name: "新潟県", harvest: 8530},
+    {rank: 22, name: "秋田県", harvest: 7680},
+    {rank: 23, name: "徳島県", harvest: 7470},
+    {rank: 24, name: "長崎県", harvest: 6930},
+    {rank: 25, name: "岐阜県", harvest: 5760},
+    {rank: 26, name: "青森県", harvest: 5250},
+    {rank: 27, name: "山梨県", harvest: 4740},
+    {rank: 28, name: "京都府", harvest: 4640},
+    {rank: 29, name: "香川県", harvest: 4380},
+    {rank: 30, name: "広島県", harvest: 4000},
+    {rank: 31, name: "兵庫県", harvest: 3660},
+    {rank: 32, name: "島根県", harvest: 3620},
+    {rank: 33, name: "静岡県", harvest: 3370},
+    {rank: 33, name: "山口県", harvest: 3370}, // 同順位
+    {rank: 35, name: "沖縄県", harvest: 3330},
+    {rank: 36, name: "滋賀県", harvest: 3090},
+    {rank: 37, name: "大分県", harvest: 2860},
+    {rank: 38, name: "岡山県", harvest: 2780},
+    {rank: 39, name: "和歌山県", harvest: 2470},
+    {rank: 40, name: "三重県", harvest: 2460},
+    {rank: 41, name: "東京都", harvest: 2020},
+    {rank: 42, name: "奈良県", harvest: 1910},
+    {rank: 43, name: "石川県", harvest: 1760},
+    {rank: 44, name: "大阪府", harvest: 1680},
+    {rank: 45, name: "鳥取県", harvest: 1630},
+    {rank: 46, name: "富山県", harvest: 1250},
+    {rank: 47, name: "福井県", harvest: 1210}
+];
