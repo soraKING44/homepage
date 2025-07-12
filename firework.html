@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>たまや〜</title>
+
+    <meta name="description" content="ブラウザ上でいつでも楽しめる、綺麗な花火のアニメーションです。クリックやタップで色とりどりの花火が打ち上がります。星形や菱形の珍しい曲芸花火もご覧いただけます。">
+
+    <meta property="og:title" content="たまや〜 - ブラウザで楽しむ癒やしの花火アニメーション">
+    <meta property="og:description" content="ブラウザ上でいつでも楽しめる、綺麗な花火のアニメーションです。ランダムに色とりどりの花火が打ち上がります。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://soraking44.github.io/homepage/firework.html">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000022;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .back-button {
+            position: fixed;
+            right: 15px;
+            bottom: 15px;
+            padding: 5px 12px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            background-color: rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            border-radius: 5px;
+            font-family: sans-serif;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+        .back-button:hover {
+            color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: '#000022';
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .back-button {
+            position: fixed;
+            right: 15px;
+            bottom: 15px;
+            padding: 5px 12px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            background-color: rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            border-radius: 5px;
+            font-family: sans-serif;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+        .back-button:hover {
+            color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .footer-text {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.4);
+            font-family: sans-serif;
+            font-size: 12px;
+            z-index: 10;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="fireworksCanvas"></canvas>
+    <a href="https://soraking44.github.io/homepage" class="back-button">ホームへ</a>
+    <footer class="footer-text">
+        <h1>Webで楽しむ花火大会</h1>
+        <p>ランダムに花火が打ち上がります。運が良ければ星形やハート形の珍しい花火が上がるかも！？</p>
+    </footer>
+
+    <script>
+        // Canvas要素と2Dコンテキストを取得
+        const canvas = document.getElementById('fireworksCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Canvasのサイズをウィンドウサイズに設定
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // 花火とパーティクルグループを格納する配列
+        let fireworks = [];
+        let particleGroups = [];
+
+        // ウィンドウサイズが変更されたときにCanvasサイズを調整
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // HSLカラーを生成するヘルパー関数
+        function hslColor(h, s, l) {
+            return `hsl(${h}, ${s}%, ${l}%)`;
+        }
+
+        // 花火のクラス
+        class Firework {
+            constructor() {
+                const excludedWidth = canvas.width / 8;
+                this.x = Math.random() * (canvas.width - excludedWidth * 2) + excludedWidth;
+                this.y = canvas.height;
+                this.startY = this.y;
+                this.targetX = this.x;
+                const minY = canvas.height / 4;
+                const maxY = canvas.height / 2;
+                this.targetY = Math.random() * (maxY - minY) + minY;
+                
+                this.trail = [];
+                this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
+                this.speed = 1;
+                this.acceleration = 1.01; 
+                this.brightness = Math.random() * 20 + 50;
+                this.particleCount = Math.random() * 300 + 200;
+                this.color = Math.random() * 360;
+
+                // const shapes = ['circle', 'star', 'heart'];
+                // this.shape = shapes[Math.floor(Math.random() * shapes.length)];
+                // 星とハートは3%
+                const rand = Math.random();
+                if (rand < 0.03) {
+                    this.shape = 'star';
+                } else if (rand < 0.06) {
+                    this.shape = 'heart';
+                } else {
+                    this.shape = 'circle';
+                }
+
+                if (this.shape === 'star' || this.shape === 'heart') {
+                    this.particleCount = Math.random() * 300 + 350;
+                    this.particleSpeed = 10;
+                    this.particleDecay = [0.004, 0.005];
+                } else {
+                    const sizeType = Math.floor(Math.random() * 2);
+                    switch (sizeType) {
+                        case 0:
+                            this.particleCount = Math.random() * 200 + 150;
+                            this.particleSpeed = Math.random() * 4 + 4;
+                            this.particleDecay = [0.004, 0.005];
+                            break;
+                        case 1:
+                            this.particleCount = Math.random() * 300 + 350;
+                            this.particleSpeed = Math.random() * 5 + 7;
+                            this.particleDecay = [0.004, 0.005];
+                            break;
+                    }
+                }
+            }
+
+            // 花火の状態を更新。完了したらtrueを返す
+            update() {
+                this.trail.push([this.x, this.y]);
+                if (this.trail.length > 5) {
+                    this.trail.shift();
+                }
+
+                this.speed *= this.acceleration;
+                const vx = Math.cos(this.angle) * this.speed;
+                const vy = Math.sin(this.angle) * this.speed;
+                
+                if (this.y < this.targetY) {
+                    return true;
+                } else {
+                    this.x += vx;
+                    this.y += vy;
+                    return false;
+                }
+            }
+
+            // 花火を描画
+            draw() {
+                const totalDistance = this.startY - this.targetY;
+                const currentDistance = this.startY - this.y;
+
+                if (currentDistance < totalDistance / 2) {
+                    ctx.beginPath();
+                    if (this.trail.length > 0) {
+                        const lastTrailPoint = this.trail[this.trail.length - 1];
+                        ctx.moveTo(lastTrailPoint[0], lastTrailPoint[1]);
+                        ctx.lineTo(this.x, this.y);
+                        ctx.strokeStyle = hslColor(30, 100, this.brightness);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // パーティクル（火花）のクラス
+        class Particle {
+            constructor(x, y, color, maxSpeed, decayInfo) {
+                this.x = x;
+                this.y = y;
+                this.trail = [];
+                this.angle = Math.random() * Math.PI * 2;
+                this.speed = Math.random() * (maxSpeed - 2) + 2; 
+                this.friction = 0.97;
+                this.gravity = 0.5;
+                this.alpha = 1;
+                this.decay = Math.random() * decayInfo[1] + decayInfo[0];
+                this.color = color;
+                this.brightness = Math.random() * 30 + 50;
+            }
+
+            // パーティクルの状態を更新。完了したらtrueを返す
+            update() {
+                this.trail.push([this.x, this.y]);
+                if (this.trail.length > 3) {
+                    this.trail.shift();
+                }
+
+                this.speed *= this.friction;
+                this.x += Math.cos(this.angle) * this.speed;
+                this.y += Math.sin(this.angle) * this.speed + this.gravity;
+                this.alpha -= this.decay;
+
+                return this.alpha <= this.decay;
+            }
+
+            // パーティクルを描画
+            draw() {
+                ctx.beginPath();
+                if (this.trail.length > 0) {
+                    const lastTrailPoint = this.trail[this.trail.length - 1];
+                    ctx.moveTo(lastTrailPoint[0], lastTrailPoint[1]);
+                    ctx.lineTo(this.x, this.y);
+                    ctx.strokeStyle = `hsla(${this.color}, 100%, ${this.brightness}%, ${this.alpha})`;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        // 星形のパスを作成する関数
+        function createStarPath(x, y, size) {
+            const path = new Path2D();
+            const points = 5;
+            const outerRadius = size * 20.0;
+            const innerRadius = size * 6.0;
+            
+            path.moveTo(x, y - outerRadius);
+            for (let i = 0; i < 2 * points; i++) {
+                const radius = (i % 2 === 0) ? outerRadius : innerRadius;
+                const angle = (Math.PI / points) * i - Math.PI / 2;
+                path.lineTo(x + radius * Math.cos(angle), y + radius * Math.sin(angle));
+            }
+            path.closePath();
+            return path;
+        }
+
+        // ハート形のパスを作成する関数
+        function createHeartPath(x, y, size) {
+            const path = new Path2D();
+            const scale = size * 0.8;
+            const startT = 0;
+            
+            let firstX, firstY;
+            for (let t = startT; t < Math.PI * 2; t += 0.1) {
+                const hx = x - scale * (16 * Math.pow(Math.sin(t), 3));
+                const hy = y - scale * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+                if (t === startT) {
+                    path.moveTo(hx, hy);
+                    firstX = hx;
+                    firstY = hy;
+                } else {
+                    path.lineTo(hx, hy);
+                }
+            }
+            path.lineTo(firstX, firstY);
+            path.closePath();
+            return path;
+        }
+
+        // パーティクルグループを作成する関数
+        function createParticles(x, y, particleCount, color, particleSpeed, particleDecay, shape) {
+            const newParticles = [];
+            for (let i = 0; i < particleCount; i++) {
+                newParticles.push(new Particle(x, y, color, particleSpeed, particleDecay));
+            }
+
+            const group = {
+                shape: shape,
+                particles: newParticles,
+                path: null
+            };
+
+            if (shape === 'star') {
+                group.path = createStarPath(x, y, particleSpeed);
+            } else if (shape === 'heart') {
+                group.path = createHeartPath(x, y, particleSpeed);
+            }
+            
+            particleGroups.push(group);
+        }
+
+        // メインのアニメーションループ
+        function animate() {
+            requestAnimationFrame(animate);
+
+            ctx.fillStyle = 'rgba(0, 0, 34, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (Math.random() < 0.02) {
+                fireworks.push(new Firework());
+            }
+
+            // すべての花火を更新・描画
+            for (let i = fireworks.length - 1; i >= 0; i--) {
+                const firework = fireworks[i];
+                firework.draw();
+                if (firework.update()) {
+                    createParticles(firework.targetX, firework.targetY, firework.particleCount, firework.color, firework.particleSpeed, firework.particleDecay, firework.shape);
+                    fireworks.splice(i, 1);
+                }
+            }
+
+            // すべてのパーティクルグループを更新・描画
+            for (let i = particleGroups.length - 1; i >= 0; i--) {
+                const group = particleGroups[i];
+                const useClip = group.shape !== 'circle' && group.path;
+
+                if (useClip) {
+                    ctx.save();
+                    ctx.clip(group.path);
+                }
+
+                for (let j = group.particles.length - 1; j >= 0; j--) {
+                    const particle = group.particles[j];
+                    particle.draw();
+                    if (particle.update()) {
+                        group.particles.splice(j, 1);
+                    }
+                }
+
+                if (useClip) {
+                    ctx.restore();
+                }
+
+                if (group.particles.length === 0) {
+                    particleGroups.splice(i, 1);
+                }
+            }
+        }
+
+        // アニメーションを開始
+        animate();
+    </script>
+</body>
+</html>
