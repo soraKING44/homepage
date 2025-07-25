@@ -3,7 +3,7 @@
 window.rankingData = [
     {rank: 1, name: "千葉県", harvest: 144900},
     {rank: 2, name: "北海道", harvest: 128800},
-    {rank: 2, name: "青森県", harvest: 107300},
+    {rank: 3, name: "青森県", harvest: 107300},
     {rank: 4, name: "鹿児島県", harvest: 90400},
     {rank: 5, name: "神奈川県", harvest: 75400},
     {rank: 6, name: "宮崎県", harvest: 64800},
