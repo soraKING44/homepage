@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マーダーミステリー「雫の妖精と闇のオークション」</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header id="site-header" class="site-header">
+        <div class="container">
+            <a href="https://soraking44.github.io/homepage" class="btn-header">
+                <i class="fas fa-home"></i> ホームページに戻る
+            </a>
+        </div>
+    </header>
+
+    <div id="app-container" class="container">
+
+        <div id="page-home" class="page active">
+            <header>
+                <h1 class="main-title">雫の妖精と闇のオークション</h1>
+                <p class="subtitle">檻から消えた精霊の歌</p>
+            </header>
+            <main>
+                <div id="introduction-box" class="content-box mb-3 box-introduction">
+                    </div>
+                <hr class="section-divider">
+                <div id="precautions-box" class="content-box content-box-neutral mb-3">
+                    </div>
+                <div id="how-to-play-box" class="content-box content-box-neutral">
+                    </div>
+
+                <div class="choice-cards mt-3">
+                    <a href="game.html#assign" id="btn-go-assign" class="choice-card assign-card" style="text-decoration: none;">
+                        <h3>1. 役を割り振る</h3>
+                        <p>代表者が配役を決め、結果を全員に伝えます。</p>
+                    </a>
+                    <a href="game.html#recollection" id="btn-go-start" class="choice-card list-card" style="text-decoration: none;">
+                        <h3>2. スタート</h3>
+                        <p>全員の準備が完了したら、同時にこのボタンを押してください。</p>
+                    </a>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Version: <span id="version-number"></span></p>
+            <p>&copy; soraKING. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="main.js"></script>
+
+</body>
+</html>

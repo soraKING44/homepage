@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マーダーミステリー「雫の妖精と闇のオークション」</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <button id="sidebar-toggle-btn" class="sidebar-toggle-btn"><i class="fas fa-bars"></i></button>
+    
+    <header id="site-header" class="site-header" style="display: none;">
+        <div class="container">
+            <a href="index.html" class="btn-header">
+                <i class="fas fa-home"></i> トップページに戻る
+            </a>
+        </div>
+    </header>
+
+    <div id="app-container" class="container">
+
+        <div id="page-assign" class="page">
+            <h2 class="page-title">ランダム割り振り</h2>
+            <div class="content-box">
+                <p class="mb-3">代表者は、参加者の名前を入力して「割り振る」ボタンを押してください。<br>表示された結果を各プレイヤーに伝えてください。</p>
+                <div class="form-group">
+                    <label for="player-names">参加者の名前（改行で区切る）</label>
+                    <textarea id="player-names" rows="5" class="form-control" placeholder="田中&#10;鈴木&#10;佐藤&#10;..."></textarea>
+                </div>
+                <button id="btn-assign-roles" class="btn btn-primary">
+                    <i class="fas fa-random"></i> 割り振る
+                </button>
+                <div id="assign-results-container" class="hidden">
+                    <h3 class="mt-3">割り振り結果</h3>
+                    <div id="assign-results"></div>
+                    <button id="btn-copy-results" class="btn btn-secondary mt-3">
+                        <i class="fas fa-copy"></i> 結果をコピーする
+                    </button>
+                </div>
+                 <a href="index.html" class="btn btn-neutral mt-3" style="display: block; text-align: center;">
+                    トップページに戻る
+                 </a>
+            </div>
+        </div>
+
+        <div id="page-recollection" class="page">
+            <h2 class="page-title">回想</h2>
+            <div id="recollection-scene-1" class="content-box mb-3 box-introduction"></div>
+            <div id="recollection-scene-2" class="content-box mb-3 box-introduction"></div>
+            <div id="recollection-scene-3" class="content-box mb-3 box-introduction"></div>
+            <div class="content-box content-box-neutral mb-3">
+                <p class="text-center" style="margin:0;">【注意】全員が読み終わってから次へ進んでください</p>
+            </div>
+            <div class="button-group mt-3">
+                <a href="index.html" class="btn btn-neutral">
+                    <i class="fas fa-home"></i> トップに戻る
+                </a>
+                <button id="btn-go-character-list" class="btn btn-primary">
+                    <i class="fas fa-arrow-right"></i> キャラクター選択へ進む
+                </button>
+            </div>
+        </div>
+
+        <div id="page-character-list" class="page">
+            <h2 class="page-title">キャラクター選択</h2>
+            <p class="text-center mb-3">自分が担当するキャラクターを選択してください。</p>
+            <div id="character-grid"> </div>
+            <div class="button-group mt-3">
+                <button id="btn-back-to-recollection" class="btn btn-neutral">
+                    <i class="fas fa-arrow-left"></i> 回想に戻る
+                </button>
+            </div>
+        </div>
+        
+        <div id="page-confirm" class="page">
+             <h2 class="page-title">ネタバレ注意</h2>
+            <div class="content-box">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3 class="mb-2">キャラクターページ確認</h3>
+                <p>以下のキャラクターのページに進みます。お間違いありませんか？</p>
+                <div id="confirm-character-name"></div>
+                <div class="button-group">
+                    <button id="btn-confirm-yes" class="btn btn-primary">はい</button>
+                    <button id="btn-confirm-no" class="btn btn-neutral">いいえ</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-character-hub" class="page">
+            <header class="hub-header">
+                <div><h2 id="hub-character-name"></h2></div>
+                <button id="btn-back-to-list" class="btn btn-neutral">
+                    <i class="fas fa-arrow-left"></i>キャラクター選択へ戻る
+                </button>
+            </header>
+
+            <div class="timer-section">
+                <div class="timer-controls"> 
+                    <div class="timer-display">
+                        <span id="timer-minutes">05</span>:<span id="timer-seconds">00</span>
+                    </div>
+                    <div class="timer-settings">
+                        <input type="number" id="timer-set-minutes" value="5" min="1">
+                        <button id="btn-timer-set" title="時間を設定" class="btn btn-primary"><i class="fas fa-check"></i></button>
+                        <button id="btn-timer-start" title="開始" class="btn btn-primary"><i class="fas fa-play"></i></button>
+                        <button id="btn-timer-stop" title="停止" class="btn btn-secondary"><i class="fas fa-pause"></i></button>
+                        <button id="btn-timer-reset" title="リセット" class="btn btn-neutral"><i class="fas fa-sync"></i></button>
+                    </div>
+                </div>
+                <div class="timer-explanation">
+                    <p><i class="fas fa-info-circle"></i> 使い方: 左の枠に分数（例: 15）を入力後、✅ボタンで時間をセットします。</p>
+                </div>
+            </div>
+
+            <main id="hub-content" class="content-box"></main>
+
+            <div class="content-box content-box-neutral mb-3">
+                <p class="text-center" style="margin:0;">【注意】全員が読み終わってから次へ進んでください</p>
+            </div>
+            <div class="button-group mt-3">
+                 <button id="btn-go-conference" class="btn btn-primary">
+                    <i class="fas fa-users"></i> 次へ進む
+                 </button>
+            </div>
+        </div>
+
+        <div id="page-ending" class="page">
+            <h2 class="page-title">解説</h2>
+            <div id="explanation-trick-content" class="content-box box-introduction mb-3"></div>
+            <div id="explanation-choice-content" class="content-box box-introduction"></div>
+            <div id="epilogue-content" class="content-box content-box-neutral"></div>
+            <a href="index.html" class="btn btn-primary mt-3" style="display: block; text-align: center;">トップページに戻る</a>
+        </div>
+
+        <div id="page-conference" class="page">
+            <h2 class="page-title">推理パート</h2>
+            <div class="content-box content-box-neutral">
+                <p class="text-center" style="font-size: 1.1rem;">
+                    時系列的には導入が巡回記録と推理パートの間に入ります。
+                </p>
+            </div>
+            <div id="conference-scene1-part1" class="content-box mb-3 box-introduction"></div>
+            <div id="conference-scene1-part2" class="content-box mb-3 box-introduction"></div>
+            <div class="timer-section">
+                <div class="timer-controls">
+                    <div class="timer-display">
+                        <span id="conference-timer-minutes">20</span>:<span id="conference-timer-seconds">00</span>
+                    </div>
+                    <div class="timer-settings">
+                        <input type="number" id="conference-timer-set-minutes" value="20" min="1">
+                        <button id="btn-conference-timer-set" title="時間を設定" class="btn btn-primary"><i class="fas fa-check"></i></button>
+                        <button id="btn-conference-timer-start" title="開始" class="btn btn-primary"><i class="fas fa-play"></i></button>
+                        <button id="btn-conference-timer-stop" title="停止" class="btn btn-secondary"><i class="fas fa-pause"></i></button>
+                        <button id="btn-conference-timer-reset" title="リセット" class="btn btn-neutral"><i class="fas fa-sync"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="content-box content-box-neutral">
+                <h3 class="section-title">議論の時間</h3>
+                <p class="text-center" style="font-size: 1.1rem;">
+                    以上の情報を元に、<strong>20分間の議論</strong>を行ってください。<br>
+                    メリルの言う通り、ここではまだ犯人を断定する必要はありませが、皆さんは最終的にリュミエールが消失した謎を解く必要があります。あやしい人物を問い詰めたり、鍵になりそうな情報を共有しておくと良いかもしれません。<br>
+                    時間が経過したら議論が途中でも次へお進みください。
+                </p>
+            </div>
+            <div class="button-group mt-3">
+                <button id="btn-back-to-hub-from-conference" class="btn btn-neutral">
+                    <i class="fas fa-arrow-left"></i> 巡回記録に戻る
+                </button>
+                <button id="btn-go-conference-2" class="btn btn-primary">
+                    <i class="fas fa-arrow-right"></i> 次へ進む
+                </button>
+            </div>
+        </div>
+
+        <div id="page-conference-2" class="page">
+            <h2 class="page-title">結帳檻の調査記録</h2>
+            <div id="conference-scene2" class="content-box mb-3 box-introduction"></div>
+            <div class="content-box content-box-neutral">
+                <p class="text-center" style="font-size: 1.1rem;">【注意】全員が読み終わってから次へ進んでください</p>
+            </div>
+            <div class="button-group mt-3">
+                <button id="btn-back-to-conference" class="btn btn-neutral">
+                    <i class="fas fa-arrow-left"></i> 推理パートに戻る
+                </button>
+                <button id="btn-go-exploration" class="btn btn-primary">
+                    <i class="fas fa-search"></i> 館内を探索する
+                </button>
+            </div>
+        </div>
+
+        <div id="page-mansion-exploration" class="page">
+            <h2 class="page-title">館内探索</h2>
+            <div id="exploration-content" class="content-box"></div>
+            <div class="button-group mt-3">
+                <button id="btn-go-final-discussion" class="btn btn-primary">
+                    <i class="fas fa-gavel"></i> 最後の議論へ進む
+                </button>
+            </div>
+        </div>
+
+        <div id="page-final-discussion" class="page">
+            <h2 class="page-title">最後の議論</h2>
+            <div id="final-discussion-content" class="content-box mb-3 box-introduction">
+                </div>
+            <div class="timer-section">
+                <div class="timer-controls">
+                    <div class="timer-display">
+                        <span id="final-timer-minutes">15</span>:<span id="final-timer-seconds">00</span>
+                    </div>
+                    <div class="timer-settings">
+                        <input type="number" id="final-timer-set-minutes" value="15" min="1">
+                        <button id="btn-final-timer-set" title="時間を設定" class="btn btn-primary"><i class="fas fa-check"></i></button>
+                        <button id="btn-final-timer-start" title="開始" class="btn btn-primary"><i class="fas fa-play"></i></button>
+                        <button id="btn-final-timer-stop" title="停止" class="btn btn-secondary"><i class="fas fa-pause"></i></button>
+                        <button id="btn-final-timer-reset" title="リセット" class="btn btn-neutral"><i class="fas fa-sync"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="content-box content-box-neutral mb-3">
+                <p>皆さんが最後に取るべき行動を決定してください</p>
+                <p>全員で話し合い、共通の選択をしてください。話し合っても結論がまとまらない場合は、多数決で必ず1つに決めてください</p>
+                <p>犯人を伝える場合は、プレイヤーの中から1人を選んでください。プレイヤー以外のキャラクターは犯人として選択できません</p>
+            </div>
+            <div class="content-box content-box-neutral">
+                <h3 class="section-title">皆さんの行動を選択してください</h3>
+                
+                <div class="final-choice-section">
+                    <h4>誰に伝えますか？</h4>
+                    <div class="choice-group" id="choice-group-person">
+                        <div class="final-choice-card" data-value="gilbert">
+                            <i class="fas fa-user-secret"></i>
+                            <span>ギルバート</span>
+                        </div>
+                        <div class="final-choice-card" data-value="merril">
+                            <i class="fas fa-user-tie"></i>
+                            <span>メリル</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="final-choice-section">
+                    <h4>何を伝えますか？</h4>
+                    <div class="choice-group" id="choice-group-content">
+                        <div class="final-choice-card" data-value="culprit">
+                            <i class="fas fa-skull-crossbones"></i>
+                            <span>犯人</span>
+                        </div>
+                        <div class="final-choice-card" data-value="truth">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>真実</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="btn-submit-final-choice" class="btn btn-primary mt-3">
+                    <i class="fas fa-gavel"></i> 決定する
+                </button>
+            </div>
+        </div>
+
+        <div id="page-wrong-end" class="page">
+            <h2 class="page-title">ギルバートの激昂</h2>
+            <div id="wrong-end-content" class="content-box box-introduction"></div>
+            <div class="content-box content-box-neutral mb-3">
+                <p>何かを見落としているかもしれません。議論に戻って、もう少し考えてみましょう</p>
+                <p>諦める場合は解説へ進んでください</p>
+            </div>
+            <div class="button-group mt-3">
+                <button id="btn-back-to-final-discussion-from-wrong" class="btn btn-neutral">
+                    <i class="fas fa-arrow-left"></i> 最後の議論に戻る
+                </button>
+                <button id="btn-go-ending-from-wrong" class="btn btn-primary">
+                    <i class="fas fa-book"></i> 解説へ
+                </button>
+            </div>
+        </div>
+
+        <div id="page-normal-end" class="page">
+            <h2 class="page-title">エンディング</h2>
+            <div id="normal-end-content" class="content-box box-introduction"></div>
+            <div class="content-box content-box-neutral mb-3">
+                <p>この物語には、【normal end】とは別の【true end】が用意されています。議論に戻って別の選択肢を選ぶと、より良い未来にたどり着けるかもしれません</p>
+                <p>諦める場合は解説へ進んでください</p>
+            </div>
+            <div class="button-group mt-3">
+                <button id="btn-back-to-final-discussion-from-normal" class="btn btn-neutral">
+                    <i class="fas fa-arrow-left"></i> 最後の議論に戻る
+                </button>
+                <button id="btn-go-ending-from-normal" class="btn btn-primary">
+                    <i class="fas fa-book"></i> 解説へ
+                </button>
+            </div>
+        </div>
+
+        <div id="page-true-end" class="page">
+            <h2 class="page-title">エンディング</h2>
+            <div id="true-end-content" class="content-box box-introduction">
+                </div>
+            <div class="button-group mt-3">
+                <button id="btn-go-ending-from-true" class="btn btn-primary" style="display: block; margin: auto;">
+                    <i class="fas fa-book"></i> 解説へ
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="content-box">
+                <p id="modal-text"></p>
+                <button id="modal-close-btn" class="btn btn-primary">閉じる</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="info-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="content-box">
+                <h3 id="info-modal-title" class="section-title" style="margin-bottom: 1.5rem;"></h3>
+                <div id="info-modal-body"></div>
+                <button id="info-modal-close-btn" class="btn btn-primary mt-3">閉じる</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="site-footer">
+        <div class="container">
+            <p>Version: <span id="version-number"></span></p>
+            <p>&copy; soraKING. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <div id="info-sidebar" class="info-sidebar">
+        <h4><i class="fas fa-info-circle"></i> 確認事項</h4>
+        <button id="btn-show-intro-sidebar" class="btn btn-sidebar"><i class="fas fa-book-open"></i> 導入</button>
+        <button id="btn-show-recollection-1" class="btn btn-sidebar"><i class="fas fa-history"></i> 回想：シーン1</button>
+        <button id="btn-show-recollection-2" class="btn btn-sidebar"><i class="fas fa-history"></i> 回想：シーン2</button>
+        <button id="btn-show-recollection-3" class="btn btn-sidebar"><i class="fas fa-history"></i> 回想：シーン3</button>
+        <button id="btn-show-info-1" class="btn btn-sidebar"><i class="fas fa-file-alt"></i> 情報1</button>
+        <button id="btn-show-info-2" class="btn btn-sidebar"><i class="fas fa-file-alt"></i> 情報2</button>
+        
+        <button id="btn-show-patrol-log" class="btn btn-sidebar" style="display: none;"><i class="fas fa-walking"></i> 巡回記録</button>
+        <button id="btn-show-conference-1" class="btn btn-sidebar" style="display: none;"><i class="fas fa-users"></i> 推理パート</button>
+        <button id="btn-show-conference-2" class="btn btn-sidebar" style="display: none;"><i class="fas fa-cogs"></i> 結帳檻の調査記録</button>
+        <button id="btn-show-exploration-sidebar" class="btn btn-sidebar" style="display: none;"><i class="fas fa-search"></i> 館内探索</button>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>

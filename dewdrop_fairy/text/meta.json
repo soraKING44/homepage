@@ -1,0 +1,20 @@
+{
+  "roles": [
+    {
+      "id": "spade",
+      "name": "スペード"
+    },
+    {
+      "id": "heart",
+      "name": "ハート"
+    },
+    {
+      "id": "diamonds",
+      "name": "ダイヤ"
+    },
+    {
+      "id": "clover",
+      "name": "クローバー"
+    }
+  ]
+}
