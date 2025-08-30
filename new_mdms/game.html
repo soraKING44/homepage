@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex">
     <title>マーダーミステリー「雫の妖精と闇のオークション」</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -122,7 +121,6 @@
 
             <div class="content-box content-box-neutral mb-3">
                 <p class="text-center" style="margin:0;">【注意】全員が読み終わってから次へ進んでください</p>
-                <p class="text-center" style="margin:0;">もし時間が足りなければ、全員が同じだけ時間を追加してテキストを読んでください</p>
             </div>
             <div class="button-group mt-3">
                  <button id="btn-go-conference" class="btn btn-primary">
@@ -136,10 +134,6 @@
             <div id="explanation-trick-content" class="content-box box-introduction mb-3"></div>
             <div id="explanation-choice-content" class="content-box box-introduction"></div>
             <div id="epilogue-content" class="content-box content-box-neutral"></div>
-            <div class="content-box content-box-neutral">
-                <p>あとがき、および後日談は、以下のリンクからお楽しみいただけます。</p>
-                <a href="https://note.com/soraking44/n/nd2c2397eda11?sub_rt=share_pw" target="_blank" rel="noopener noreferrer">【マーダーミステリー：雫の妖精と闇のオークション】 作者のあとがきと After Story</a>
-            </div>
             <a href="index.html" class="btn btn-primary mt-3" style="display: block; text-align: center;">トップページに戻る</a>
         </div>
 
@@ -155,10 +149,10 @@
             <div class="timer-section">
                 <div class="timer-controls">
                     <div class="timer-display">
-                        <span id="conference-timer-minutes">15</span>:<span id="conference-timer-seconds">00</span>
+                        <span id="conference-timer-minutes">20</span>:<span id="conference-timer-seconds">00</span>
                     </div>
                     <div class="timer-settings">
-                        <input type="number" id="conference-timer-set-minutes" value="15" min="1">
+                        <input type="number" id="conference-timer-set-minutes" value="20" min="1">
                         <button id="btn-conference-timer-set" title="時間を設定" class="btn btn-primary"><i class="fas fa-check"></i></button>
                         <button id="btn-conference-timer-start" title="開始" class="btn btn-primary"><i class="fas fa-play"></i></button>
                         <button id="btn-conference-timer-stop" title="停止" class="btn btn-secondary"><i class="fas fa-pause"></i></button>
@@ -169,10 +163,8 @@
             <div class="content-box content-box-neutral">
                 <h3 class="section-title">議論の時間</h3>
                 <p class="text-center" style="font-size: 1.1rem;">
-                    以上の情報を元に、<strong>15分間の議論</strong>を行ってください。<br>
-                    メリルの言う通り、ここではまだ犯人を断定する必要はありませんが、<br>
-                    皆さんは最終的にリュミエールが消失した謎を解く必要があります。<br>
-                    あやしい人物を問い詰めたり、鍵になりそうな情報を共有しておくと良いかもしれません。<br>
+                    以上の情報を元に、<strong>20分間の議論</strong>を行ってください。<br>
+                    メリルの言う通り、ここではまだ犯人を断定する必要はありませが、皆さんは最終的にリュミエールが消失した謎を解く必要があります。あやしい人物を問い詰めたり、鍵になりそうな情報を共有しておくと良いかもしれません。<br>
                     時間が経過したら議論が途中でも次へお進みください。
                 </p>
             </div>
@@ -205,9 +197,6 @@
         <div id="page-mansion-exploration" class="page">
             <h2 class="page-title">館内探索</h2>
             <div id="exploration-content" class="content-box"></div>
-            <div class="content-box content-box-neutral mb-3">
-                <p class="text-center" style="margin:0;">【注意】全員が読み終わってから次へ進んでください</p>
-            </div>
             <div class="button-group mt-3">
                 <button id="btn-go-final-discussion" class="btn btn-primary">
                     <i class="fas fa-gavel"></i> 最後の議論へ進む
@@ -255,24 +244,16 @@
                     </div>
                 </div>
 
-                <div class="final-choice-section" id="culprit-selection-section">
-                    <h4>誰が犯人ですか？</h4>
-                    <div class="choice-group" id="choice-group-culprit">
-                        <div class="final-choice-card" data-value="leo">
-                            <i class="fas fa-user-shield"></i>
-                            <span>正規の警備員のレオ</span>
+                <div class="final-choice-section">
+                    <h4>何を伝えますか？</h4>
+                    <div class="choice-group" id="choice-group-content">
+                        <div class="final-choice-card" data-value="culprit">
+                            <i class="fas fa-skull-crossbones"></i>
+                            <span>犯人</span>
                         </div>
-                        <div class="final-choice-card" data-value="woman">
-                            <i class="fas fa-user-secret"></i>
-                            <span>噂好きの中年女性</span>
-                        </div>
-                        <div class="final-choice-card" data-value="vic">
-                            <i class="fas fa-user-cog"></i>
-                            <span>整備員のヴィク</span>
-                        </div>
-                        <div class="final-choice-card" data-value="not_stolen">
+                        <div class="final-choice-card" data-value="truth">
                             <i class="fas fa-lightbulb"></i>
-                            <span>盗まれていない</span>
+                            <span>真実</span>
                         </div>
                     </div>
                 </div>

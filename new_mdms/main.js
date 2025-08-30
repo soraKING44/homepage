@@ -117,8 +117,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         this.stop();
                         this.secondsRemaining = 0;
                         this.updateDisplay();
-                        playTimerEndSound();
-                        showModal("時間が終了しました。");
+                        playTimerEndSound(); // グローバルな効果音関数を呼び出し
+                        showModal("時間が終了しました。"); // グローバルなモーダル関数を呼び出し
                     }
                 }, 1000);
             }
@@ -234,6 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             const visibleButtons = sidebarConfig[pageId] || [];
+            // const infoSidebar = document.getElementById('info-sidebar');
             const infoSidebar = document.getElementById('info-sidebar');
             const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
             const hasButtons = visibleButtons.length > 0;
@@ -326,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // --- ページ描画関数 ---
+        // --- ページ描画関数 (内容は変更なし) ---
         async function renderRecollectionScenes() {
             try {
                 const [scene1Res, scene2Res, scene3Res] = await Promise.all([
@@ -375,7 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('hub-character-name').textContent = role.name;
                 const contentContainer = document.getElementById('hub-content');
                 contentContainer.innerHTML = `
-                    <div class="info-section mb-3"><h3>【個人の情報】</h3><div style="padding: 1rem 1.5rem;"><p>巡回記録は【個人の情報】です<br>ご自身はいつでも自由に読み返して構いませんが、このページを他のプレイヤーに見せてはいけません<br>書かれている内容を伝える場合は自分の言葉で伝えてください<br><br>導入・回想・情報1, 2は全員に公開されています。いつでも読み返せる情報です<br>↑スマートフォンの場合は左上のハンバーガーボタンをご確認ください</br></br>時間の管理にタイマーをお使いください。目安は5分です<br></div></div>
+                    <div class="info-section mb-3"><h3>【個人の情報】</h3><div style="padding: 1rem 1.5rem;"><p>巡回記録は【個人の情報】です<br>ご自身はいつでも自由に読み返して構いませんが、このページを他のプレイヤーに見せてはいけません<br>書かれている内容を伝える場合は自分の言葉で伝えてください<br><br>導入・回想・情報1, 2は全員に公開されています。いつでも読み返せる情報です</p>時間の管理にタイマーをお使いください。目安は5分です<br></div></div>
                     <div class="info-section"><h3>巡回記録</h3><div style="padding: 1rem 1.5rem;"><p>警備員の皆様はオークションが行われている間、館内の4ヶ所を巡回します<br>巡回するエリアは4人とも同じですが、巡回するタイミングが異なります</p></div><div id="investigation-list">
                     ${role.investigation.map(item => `<div><div class="info-item"><span>${item.title}</span><i class="fas fa-chevron-down"></i></div><div class="info-content"><p>${item.content.replace(/\n/g, '<br>')}</p></div></div>`).join('')}
                     </div></div>`;
@@ -400,9 +401,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (line.startsWith('#### ')) {
                             return `<h4>${line.substring(5)}</h4>`;
                         }
-                        let processedLine = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                        processedLine = processedLine.replace(/(https?:\/\/\S+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
-                        return `<p>${processedLine || '&nbsp;'}</p>`;
+                        const boldedLine = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                        return `<p>${boldedLine || '&nbsp;'}</p>`;
                     }).join('');
 
                     const container = document.getElementById(containerId);
@@ -581,18 +581,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-go-ending-from-wrong')?.addEventListener('click', () => {
             if (confirm("本当に解説に進みますか？\nこれにより、物語の全ての謎が明らかになります。")) {
                 navigateTo('ending');
-                // window.location.href = 'game.html#ending';
             }
         });
         document.getElementById('btn-back-to-final-discussion-from-normal')?.addEventListener('click', () => navigateTo('final-discussion'));
         document.getElementById('btn-go-ending-from-normal')?.addEventListener('click', () => {
             if (confirm("本当に解説に進みますか？\nこれにより、物語の全ての謎が明らかになります。")) {
                 navigateTo('ending');
-                // window.location.href = 'game.html#ending';
             }
         });
         document.getElementById('btn-go-ending-from-true')?.addEventListener('click', () => navigateTo('ending'));
-        // document.getElementById('btn-go-ending-from-true')?.addEventListener('click', () => {window.location.href = 'game.html#ending';});
 
         // 役職割り振り
         document.getElementById('btn-assign-roles')?.addEventListener('click', async () => {
@@ -617,68 +614,46 @@ document.addEventListener('DOMContentLoaded', () => {
             const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); } });
             }, { 
-                rootMargin: '0px 0px -150px 0px'
+                rootMargin: '0px 0px -150px 0px' /* 変更：画面下から150pxの位置で発火 */
             });
             targets.forEach(target => { target.classList.add('fade-in'); observer.observe(target); });
         }
 
         // ===== 最後の議論 選択肢ロジック =====
-        // 選択肢の各要素を取得
-        const choiceGroupPerson = document.getElementById('choice-group-person');
-        const choiceGroupContent = document.getElementById('choice-group-content');
-        const culpritSelectionSection = document.getElementById('culprit-selection-section');
-        const choiceGroupCulprit = document.getElementById('choice-group-culprit');
+        // 選択肢グループのクリックイベント
+        document.querySelectorAll('.choice-group').forEach(group => {
+            group.addEventListener('click', (e) => {
+                const selectedCard = e.target.closest('.final-choice-card');
+                if (!selectedCard) return;
 
-        // 「誰に伝えるか」のクリックイベント
-        choiceGroupPerson?.addEventListener('click', (e) => {
-            const selectedCard = e.target.closest('.final-choice-card');
-            if (!selectedCard) return;
-            choiceGroupPerson.querySelectorAll('.final-choice-card').forEach(card => card.classList.remove('selected'));
-            selectedCard.classList.add('selected');
-        });
-        
-        // 「何を伝えるか」のクリックイベント
-        choiceGroupContent?.addEventListener('click', (e) => {
-            const selectedCard = e.target.closest('.final-choice-card');
-            if (!selectedCard) return;
-            choiceGroupContent.querySelectorAll('.final-choice-card').forEach(card => card.classList.remove('selected'));
-            selectedCard.classList.add('selected');
+                // 同じグループ内の他の選択肢から 'selected' クラスを削除
+                group.querySelectorAll('.final-choice-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
 
-            // 「犯人」が選ばれたらキャラクター選択肢を表示し、そうでなければ非表示にする
-            if (selectedCard.dataset.value === 'culprit') {
-                culpritSelectionSection.classList.remove('hidden');
-            } else {
-                culpritSelectionSection.classList.add('hidden');
-                // 犯人選択肢の選択状態をリセット
-                choiceGroupCulprit.querySelectorAll('.final-choice-card').forEach(card => card.classList.remove('selected'));
-            }
-        });
-
-        // 「誰が犯人か」のクリックイベント
-        choiceGroupCulprit?.addEventListener('click', (e) => {
-             const selectedCard = e.target.closest('.final-choice-card');
-             if (!selectedCard) return;
-             choiceGroupCulprit.querySelectorAll('.final-choice-card').forEach(card => card.classList.remove('selected'));
-             selectedCard.classList.add('selected');
+                // クリックされたカードに 'selected' クラスを追加
+                selectedCard.classList.add('selected');
+            });
         });
 
         // 決定ボタンのクリックイベント
         document.getElementById('btn-submit-final-choice')?.addEventListener('click', () => {
             const person = document.querySelector('#choice-group-person .selected')?.dataset.value;
-            const conclusion = document.querySelector('#choice-group-culprit .selected')?.dataset.value;
+            const content = document.querySelector('#choice-group-content .selected')?.dataset.value;
 
-            if (!person || !conclusion) {
-                showModal("「誰に伝えるか」と「誰が犯人か」の両方を選択してください。");
+            if (!person || !content) {
+                showModal("「誰に」「何を」伝えるか、両方を選択してください。");
                 return;
             }
 
-            if (person === 'gilbert' && conclusion === 'not_stolen') {
-                navigateTo('normal-end'); // ギルバートに「盗まれていない」と伝えた場合
-            } else if (person === 'merril' && conclusion === 'not_stolen') {
-                navigateTo('true-end');   // メリルに「盗まれていない」と伝えた場合
-            } else {
-                // それ以外の組み合わせは全て間違いの選択肢へ
-                navigateTo('wrong-end');
+            if (content === 'truth') {
+                if (person === 'gilbert') {
+                    navigateTo('normal-end'); // ①+④ ノーマルエンド
+                } else if (person === 'merril') {
+                    navigateTo('true-end');   // ②+④ トゥルーエンド
+                }
+            } else { // content === 'culprit' の場合
+                navigateTo('wrong-end');      // ①+③ or ②+③ 間違いの選択肢
             }
         });
 
@@ -819,7 +794,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 stopButtonId: 'btn-conference-timer-stop',
                 resetButtonId: 'btn-conference-timer-reset',
                 setButtonId: 'btn-conference-timer-set',
-                initialMinutes: 15
+                initialMinutes: 20
             });
 
             // 最後の議論ページのタイマーを生成
