@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astral Harvest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', 'Arial', sans-serif;
+            background: #0a0e27;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            touch-action: manipulation;
+            overflow-x: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--end-x), var(--end-y)) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .game-container {
+            background: rgba(15, 23, 42, 0.95);
+            border-radius: 20px;
+            padding: 30px 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.5);
+            border: 2px solid #8b5cf6;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: opacity 1s ease-in, transform 1s ease-in;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 12vw, 5rem);
+            text-align: center;
+            color: #ec4899;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(236, 72, 153, 0.8), 0 0 40px rgba(236, 72, 153, 0.4);
+            font-family: 'Audiowide', sans-serif;
+        }
+        .description {
+            text-align: left;
+            font-size: 16px;
+            color: #a78bfa;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            border: 3px solid #84cc16;
+            border-radius: 15px;
+            padding: 10px 15px;
+            background: rgba(30, 41, 59, 0.8);
+            box-shadow: 0 0 20px rgba(132, 204, 22, 0.2);
+        }
+        .description ul {
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+        .description li {
+            margin-bottom: 1em;
+        }
+        #toggle-description-btn {
+            width: 100%;
+            margin-top: 10px;
+            background: #6b7280;
+        }
+
+        .game-screen {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            border: 3px solid #84cc16;
+            box-shadow: 0 0 30px rgba(132, 204, 22, 0.3);
+        }
+
+        #message-box {
+            background: rgba(10, 14, 39, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #4a5568;
+            transition: all 0.3s ease-in-out;
+        }
+        #message {
+            font-size: 18px;
+            font-weight: bold;
+            color: #d1d5db;
+        }
+        #selected-numbers-display {
+            font-size: 24px;
+            font-weight: bold;
+            color: #84cc16;
+            min-height: 30px;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* ボタンの共通設定 */
+        .btn {
+            color: white;
+            border: none;
+            padding: 15px 10px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            filter: brightness(1.2);
+        }
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-number {
+            width: 100px;
+            height: 100px;
+            background-color: transparent;
+            border: 2px solid #6b7280;
+            border-radius: 14px;
+            padding: 4px;
+        }
+
+        .btn-image {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            border-radius: 10px;
+        }
+
+        #btn-1 .btn-image { background-image: url('image/ebi.png'); }
+        #btn-2 .btn-image { background-image: url('image/kinoko.png'); }
+        #btn-3 .btn-image { background-image: url('image/sakana.png'); }
+        #btn-4 .btn-image { background-image: url('image/kurage.png'); }
+        #btn-5 .btn-image { background-image: url('image/kudamono.png'); }
+
+        #btn-1 .btn-image { background-size: 125%; }
+        #btn-2 .btn-image { background-size: 160%; }
+        #btn-3 .btn-image { background-size: 115%; }
+        #btn-4 .btn-image { background-size: 150%; }
+        #btn-5 .btn-image { background-size: 155%; }
+
+        .btn-number.selected {
+            border: 4px solid #a78bfa;
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .action-buttons .btn {
+            flex: 1;
+        }
+        #meal-btn { background: #f97316; }
+        #check-btn { background: #ec4899; }
+        #restart-btn { 
+            background: #10b981; 
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        #history-area {
+            margin-top: 20px;
+            width: 100%;
+        }
+        #history-area h2 {
+            font-size: 18px;
+            color: #a78bfa;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #8b5cf6;
+            padding-bottom: 5px;
+        }
+        #history-list {
+            list-style: none;
+            color: #d1d5db;
+        }
+         #history-list li {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+         }
+
+        #flavor-text {
+            color: #a78bfa;
+            text-align: center;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            transition: opacity 1s ease-out;
+        }
+        #flavor-text p {
+            opacity: 0;
+            animation: fadeIn 2s ease-in forwards;
+        }
+
+        #flavor-text p:nth-child(2) { animation-delay: 2s; }
+        #flavor-text p:nth-child(3) { animation-delay: 4s; }
+        #flavor-text p:nth-child(4) { animation-delay: 6s; }
+        #flavor-text p:nth-child(5) { animation-delay: 8s; }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+            pointer-events: auto !important;
+        }
+
+        .hidden {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        .back-button {
+            position: fixed;
+            right: 15px;
+            bottom: 15px;
+            padding: 5px 12px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            background-color: rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            border-radius: 5px;
+            font-family: sans-serif; /* ゲームのフォントに合わせる場合はこの行を削除 */
+            transition: all 0.3s;
+            z-index: 100;
+        }
+        .back-button:hover {
+            color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        #status-header {
+            background: rgba(10, 14, 39, 0.7);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #4a5568;
+            text-align: center;
+            color: #ec4899;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 0 10px rgba(236, 72, 153, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <h1>Astral Harvest</h1>
+
+    <div id="flavor-text">
+        <p>とある探索者たちは宇宙船での長旅の末、新しい星へ降り立ちました。</p>
+        <p>用意してきた食料は底をつき、最も近い星までたどり着くための食料ももうありません。</p>
+        <p>その星には探索者たちが見たこともない動物や植物が暮らしていました。</p>
+        <p>過去の探索者の手記によると、この星の動植物には食べられるものと食べられないものが混ざっているようです。</p>
+        <p>食べられるものを特定し、帰りの食料を調達しましょう。</p>
+    </div>
+
+    <div class="container game-container">
+        <div class="description">
+            <div id="description-content">
+                <ul>
+                    <li><strong>ゲームの目的</strong><br>この星の食材に隠された「毒」の正体を、命を落とす前に特定することが目的です。</li>
+                    <li><strong>ゲームの進め方</strong><br>ゲームが始まると、5種類の食材の中から「毒」が1種類、または複数種類の組み合わせで設定されます。プレイヤーは復活のためのポーションを1つだけ持っています。<br>プレイヤーは「料理」と「判定」の2つの行動を自由に行うことができます。</li>
+                    <li><strong>料理</strong><br>気になる食材を1種類以上選び、「料理」ボタンを押します。選んだ食材に毒の組み合わせが全て含まれていれば「毒あり」、そうでなければ「毒なし」というヒントが得られます。「毒あり」の結果が出た場合、持っているポーションを自動で消費して復活します。しかし、既にポーションを使い切った状態で再び「毒あり」の結果が出ると、ゲームオーバーとなります。</li>
+                    <li><strong>判定</strong><br>毒の正体がわかったら、その食材の組み合わせを過不足なく選択して「判定」ボタンを押します。選択した組み合わせが正解と完全に一致していれば、ゲームは「成功」となり終了します。不正解だった場合、その時点でゲームオーバーとなります。</li>
+                </ul>
+            </div>
+            <button id="toggle-description-btn" class="btn">ルールを隠す</button>
+        </div>
+
+        <div class="game-screen">
+            <div id="status-header">
+                <span id="potion-display">残りポーション: 2</span>
+            </div>
+            <div id="message-box">
+                <p id="message">食材を選んで"料理"or"判定"！</p>
+                <div id="selected-numbers-display">&nbsp;</div>
+            </div>
+
+            <div class="button-grid">
+                <button id="btn-1" data-value="1" class="btn btn-number">
+                    <span class="btn-image"></span>
+                </button>
+                <button id="btn-2" data-value="2" class="btn btn-number">
+                    <span class="btn-image"></span>
+                </button>
+                <button id="btn-3" data-value="3" class="btn btn-number">
+                    <span class="btn-image"></span>
+                </button>
+                <button id="btn-4" data-value="4" class="btn btn-number">
+                    <span class="btn-image"></span>
+                </button>
+                <button id="btn-5" data-value="5" class="btn btn-number">
+                    <span class="btn-image"></span>
+                </button>
+            </div>
+
+            <div class="action-buttons">
+                <button id="meal-btn" class="btn">まずは『料理』！</button>
+                <button id="check-btn" class="btn">正解がわかったら『判定』！</button>
+            </div>
+        </div>
+        <button id="restart-btn" class="btn">リスタート</button>
+        
+        <div id="history-area">
+            <h2>選択した履歴</h2>
+            <ol id="history-list"></ol>
+        </div>
+
+    </div>
+    <a href="../index.html" class="back-button">ホームへ</a>
+
+    <script>
+        // --- 星空生成スクリプト ---
+        const starsContainer = document.getElementById('stars');
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+
+            const size = Math.random() * 3 + 1;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+
+            const startXPercent = Math.random() * 100;
+            const startYPercent = Math.random() * 100;
+            star.style.left = startXPercent + '%';
+            star.style.top = startYPercent + '%';
+
+            const startX = window.innerWidth * (startXPercent / 100);
+            const startY = window.innerHeight * (startYPercent / 100);
+
+            const vecX = startX - centerX;
+            const vecY = startY - centerY;
+            const length = Math.sqrt(vecX * vecX + vecY * vecY);
+
+            let endX = 0, endY = 0;
+            if (length > 0) {
+                const normVecX = vecX / length;
+                const normVecY = vecY / length;
+                const moveDistance = Math.random() * 150 + 50;
+                endX = normVecX * moveDistance;
+                endY = normVecY * moveDistance;
+            }
+            
+            star.style.setProperty('--end-x', `${endX}px`);
+            star.style.setProperty('--end-y', `${endY}px`);
+
+            const duration = Math.random() * 10 + 10;
+
+            star.style.animation = `
+                twinkle 3s infinite ease-in-out ${Math.random() * 3}s,
+                float ${duration}s linear infinite ${Math.random() * duration}s
+            `;
+            starsContainer.appendChild(star);
+        }
+        for (let i = 0; i < 50; i++) {
+            createStar();
+        }
+
+        // --- ゲームロジック ---
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const messageEl = document.getElementById('message');
+            const messageBoxEl = document.getElementById('message-box');
+            const checkBtn = document.getElementById('check-btn');
+            const mealBtn = document.getElementById('meal-btn');
+            const restartBtn = document.getElementById('restart-btn');
+            const numberButtons = document.querySelectorAll('.btn-number');
+            const selectedNumbersDisplay = document.getElementById('selected-numbers-display');
+            const historyListEl = document.getElementById('history-list');
+            const flavorText = document.getElementById('flavor-text');
+            const gameContainer = document.querySelector('.game-container');
+            const potionDisplayEl = document.getElementById('potion-display');
+
+            const toggleBtn = document.getElementById('toggle-description-btn');
+            const descriptionContent = document.getElementById('description-content');
+
+            toggleBtn.addEventListener('click', () => {
+                const isHidden = descriptionContent.style.display === 'none';
+                if (isHidden) {
+                    descriptionContent.style.display = 'block';
+                    toggleBtn.textContent = 'ルールを隠す';
+                } else {
+                    descriptionContent.style.display = 'none';
+                    toggleBtn.textContent = 'ルールを表示';
+                }
+            });
+
+            const itemLabels = ['0', 'えび', 'きのこ', 'さかな', 'くらげ', 'くだもの'];
+
+            // ゲームの状態を管理する変数
+            let secretNumbers = [];
+            let playerFacingPoisons = [];
+            let selectedNumbers = [];
+            let isGameOver = false;
+            let selectionHistory = [];
+            let potionsLeft = 1;
+
+            // ゲームの初期化・リスタート処理
+            function initGame() {
+                isGameOver = false;
+                secretNumbers.length = 0;
+                playerFacingPoisons.length = 0;
+                selectedNumbers.length = 0;
+                selectionHistory.length = 0;
+                potionsLeft = 2;
+
+                // プールをシャッフルして先頭から5つ取得
+                const numberPool = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                for (let i = numberPool.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [numberPool[i], numberPool[j]] = [numberPool[j], numberPool[i]];
+                }
+                secretNumbers = numberPool.slice(0, 5);
+
+                // 画面上の食材[1-5]に対応する毒だけを抽出
+                playerFacingPoisons = secretNumbers.filter(num => num >= 1 && num <= 5);
+                playerFacingPoisons.sort((a, b) => a - b);
+                
+                // デバッグ用: コンソールに正解を表示
+                // console.log(`内部的な正解: ${secretNumbers.join(', ')}`);
+                // console.log(`プレイヤーが探す毒: ${playerFacingPoisons.join(', ')}`);
+
+                // UIのリセット
+                messageEl.textContent = '食材を選んで"料理"or"判定"！';
+                messageEl.style.color = '#d1d5db';
+                messageBoxEl.style.borderColor = '#4a5568';
+
+                numberButtons.forEach(btn => {
+                    btn.classList.remove('selected');
+                    btn.disabled = false;
+                });
+
+                checkBtn.disabled = false;
+                mealBtn.disabled = false;
+                updateSelectedNumbersDisplay();
+                updateHistoryDisplay();
+                updatePotionDisplay();
+            }
+
+            // 選択された数字の表示を更新
+            function updateSelectedNumbersDisplay() {
+                if (selectedNumbers.length === 0) {
+                    selectedNumbersDisplay.innerHTML = '&nbsp;';
+                } else {
+                    const selectedItems = selectedNumbers.sort((a, b) => a - b).map(num => itemLabels[num]);
+                    selectedNumbersDisplay.textContent = selectedItems.join(', ');
+                }
+            }
+
+            // 数字ボタンがクリックされた時の処理
+            function handleNumberClick(event) {
+                if (isGameOver) return;
+                messageEl.textContent = '食材を選んで"料理"or"判定"！';
+                messageEl.style.color = '#d1d5db';
+                messageBoxEl.style.borderColor = '#4a5568';
+                const num = parseInt(event.currentTarget.dataset.value, 10);
+                const button = event.currentTarget;
+                const index = selectedNumbers.indexOf(num);
+                if (index > -1) {
+                    selectedNumbers.splice(index, 1);
+                    button.classList.remove('selected');
+                } else {
+                    selectedNumbers.push(num);
+                    button.classList.add('selected');
+                }
+                updateSelectedNumbersDisplay();
+            }
+
+            // 「判定」ボタンがクリックされた時の処理
+            function handleCheckClick() {
+                if (isGameOver) return;
+                if (selectedNumbers.length === 0) {
+                    messageEl.textContent = '判定する食材を1つ以上選択してください。';
+                    messageEl.style.color = '#f9a825';
+                    messageBoxEl.style.borderColor = '#f9a825';
+                    return;
+                }
+
+                const sortedSelected = [...selectedNumbers].sort((a, b) => a - b);
+                const selectedItemsText = sortedSelected.map(num => itemLabels[num]).join(', ');
+                const isCorrect = sortedSelected.toString() === playerFacingPoisons.toString();
+
+                if (isCorrect) {
+                    isGameOver = true;
+                    const poisonItemsText = playerFacingPoisons.map(num => itemLabels[num]).join(', ');
+                    messageEl.textContent = `🎉 正解！毒入り食材は ${poisonItemsText} でした！ 🎉`;
+                    messageEl.style.color = '#10b981';
+                    messageBoxEl.style.borderColor = '#10b981';
+                    checkBtn.disabled = true;
+                    mealBtn.disabled = true;
+                    numberButtons.forEach(btn => btn.disabled = true);
+                    selectionHistory.push({ selection: selectedItemsText, result: '正解' });
+                } else {
+                    isGameOver = true;
+                    const poisonItemsText = playerFacingPoisons.map(num => itemLabels[num]).join(', ');
+                    messageEl.textContent = `GAME OVER... 正解は ${poisonItemsText} でした。`;
+                    messageEl.style.color = '#ef4444';
+                    messageBoxEl.style.borderColor = '#ef4444';
+                    checkBtn.disabled = true;
+                    mealBtn.disabled = true;
+                    numberButtons.forEach(btn => btn.disabled = true);
+                    selectionHistory.push({ selection: selectedItemsText, result: '不正解(失敗)' });
+                }
+                updateHistoryDisplay();
+            }
+            function handleMealClick() {
+                if (isGameOver) return;
+                if (selectedNumbers.length === 0) {
+                    messageEl.textContent = 'まず食材を選んでください。';
+                    messageEl.style.color = '#f9a825';
+                    messageBoxEl.style.borderColor = '#f9a825';
+                    return;
+                }
+
+                const sortedSelected = [...selectedNumbers].sort((a, b) => a - b);
+                const selectedItemsText = sortedSelected.map(num => itemLabels[num]).join(', ');
+                let hasMatch = false;
+
+                if (playerFacingPoisons.length === 1) {
+                    // 単体毒モード
+                    hasMatch = selectedNumbers.includes(playerFacingPoisons[0]);
+                } else {
+                    // 組み合わせ毒モード
+                    hasMatch = playerFacingPoisons.every(poison => selectedNumbers.includes(poison));
+                }
+
+                if (hasMatch) {
+                    if (potionsLeft > 0) {
+                        potionsLeft--;
+                        messageEl.textContent = '毒だ！しかしポーションを使って復活した！';
+                        messageEl.style.color = '#f9a825';
+                        messageBoxEl.style.borderColor = '#f9a825';
+                        updatePotionDisplay();
+                        selectionHistory.push({ selection: selectedItemsText, result: '毒(復活)' });
+                    } else {
+                        isGameOver = true;
+                        const poisonItemsText = playerFacingPoisons.map(num => itemLabels[num]).join(', ');
+                        messageEl.textContent = `GAME OVER... 正解は ${poisonItemsText} でした。`;
+                        messageEl.style.color = '#ef4444';
+                        messageBoxEl.style.borderColor = '#ef4444';
+                        checkBtn.disabled = true;
+                        mealBtn.disabled = true;
+                        numberButtons.forEach(btn => btn.disabled = true);
+                        selectionHistory.push({ selection: selectedItemsText, result: '毒(失敗)' });
+                    }
+                } else {
+                    messageEl.textContent = 'セーフ、選んだ食材は安全だった';
+                    messageEl.style.color = '#84cc16';
+                    messageBoxEl.style.borderColor = '#84cc16';
+                    selectionHistory.push({ selection: selectedItemsText, result: '毒なし' });
+                }
+                updateHistoryDisplay();
+            }
+
+            // 履歴の表示を更新
+            function updateHistoryDisplay() {
+                historyListEl.innerHTML = '';
+                selectionHistory.forEach((item, index) => {
+                    const listItem = document.createElement('li');
+                    let resultColor = '';
+                    if (item.result === '毒(復活)') {
+                        resultColor = '#f9a825';
+                    } else if (item.result === '毒なし') {
+                        resultColor = '#84cc16';
+                    } else if (item.result === '毒(失敗)' || item.result === '不正解(失敗)') {
+                        resultColor = '#ef4444';
+                    } else if (item.result === '正解') {
+                        resultColor = '#10b981';
+                    }
+                    listItem.innerHTML = `
+                        <span>${index + 1}. ${item.selection}</span>
+                        <span style="color: ${resultColor}; font-weight: bold;">→ ${item.result}</span>
+                    `;
+                    historyListEl.appendChild(listItem);
+                });
+                historyListEl.scrollTop = historyListEl.scrollHeight;
+            }
+            // ポーション残量の表示を更新
+            function updatePotionDisplay() {
+                potionDisplayEl.textContent = `残りポーション: ${potionsLeft}`;
+            }
+
+            // イベントリスナーの設定
+            numberButtons.forEach(button => {
+                button.addEventListener('click', handleNumberClick);
+            });
+            checkBtn.addEventListener('click', handleCheckClick);
+            mealBtn.addEventListener('click', handleMealClick);
+            restartBtn.addEventListener('click', initGame);
+
+            // イントロ演出
+            setTimeout(() => {
+                flavorText.classList.add('hidden');
+                setTimeout(() => {
+                    flavorText.style.display = 'none';
+                    gameContainer.classList.add('visible');
+                }, 1000);
+            }, 12500);
+
+            initGame();
+        });
+    </script>
+    <script>
+        if (history.scrollRestoration) { history.scrollRestoration = 'manual'; }
+        window.scrollTo(0, 0);
+    </script>
+</body>
+</html>
