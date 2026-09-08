@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ja" data-api-base="https://mdms-worker.y0u5k2i6k-spulse.workers.dev">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <title>GMレス進行ツール</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#app">本文へ移動</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <p class="eyebrow">MURDER MYSTERY QUEST</p>
+        <h1 id="scenario-title">GMレス進行ツール</h1>
+      </div>
+    </div>
+    <div class="header-session" id="session-hud" aria-label="セッション情報" hidden>
+      <div id="character-chip" class="session-main" hidden aria-live="polite">
+        <span class="session-copy"><span class="session-label">あなたの役</span><span class="session-role"></span></span>
+      </div>
+      <div id="room-chip" class="session-room" hidden aria-live="polite">
+        <span class="room-copy"><span class="room-label">部屋コード</span><span class="room-code"></span></span>
+      </div>
+      <button type="button" id="leave-room-btn" class="session-leave" data-action="leave" hidden>部屋を退出</button>
+    </div>
+  </header>
+  <div class="world-horizon" aria-hidden="true">
+    <span class="moon"></span>
+    <span class="castle"></span>
+    <span class="mountain mountain-one"></span>
+    <span class="mountain mountain-two"></span>
+  </div>
+  <div id="connection-banner" class="connection-banner" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+  <div id="vote-timeup-banner" class="vote-timeup alert error" role="alert" hidden></div>
+  <div id="confirm-modal" class="confirm-modal" hidden></div>
+  <main id="app" class="app" tabindex="-1">
+    <noscript><p class="alert error">このアプリを使うには JavaScript を有効にしてください。</p></noscript>
+    <div id="view" aria-live="polite"></div>
+  </main>
+  <footer class="site-footer">通信内容は部屋の参加者間でのみ共有されます。</footer>
+  <!-- Set this to the deployed Worker URL before local or Pages verification. -->
+  <script>window.MDMS_API_BASE = 'https://mdms-worker.y0u5k2i6k-spulse.workers.dev';</script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
